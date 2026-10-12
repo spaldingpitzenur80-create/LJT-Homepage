@@ -9,6 +9,12 @@ Personal academic homepage of Junteng Liu, built with the [Academic Pages](https
 
 Personal details are configured in `_config.yml` and `_data/authors.yml`; header links are configured in `_data/navigation.yml`.
 
+## Publishing
+
+The site is configured for `https://spaldingpitzenur80-create.github.io/LJT-Homepage/`.
+
+In **Settings -> Pages**, select **GitHub Actions** as the build source. The `Deploy Academic Pages template site to Pages` workflow then builds and publishes the site on pushes to `master`. The `Jekyll build` workflow validates the build separately.
+
 ## Local development
 
 ```bash

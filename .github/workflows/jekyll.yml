@@ -1,4 +1,6 @@
 # Workflow for building and deploying the personal academic site to GitHub Pages
+# Requires GitHub Pages to be enabled for this repository with "GitHub Actions"
+# selected as the build source (Settings -> Pages).
 name: Deploy Academic Pages template site to Pages
 
 on:
@@ -30,8 +32,6 @@ jobs:
           cache-version: 0
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6.0.0
-        with:
-          enablement: true
       - name: Build with Jekyll
         run: bundle exec jekyll build
         env:
