@@ -32,17 +32,6 @@ jobs:
         env:
           JEKYLL_ENV: production
 
-      - name: Inspect rendered site
-        run: |
-          for page in _site/index.html _site/publications/index.html; do
-            echo "=== publication order in $page"
-            grep -n -F -e 'SynLogic:' -e 'On the Perception Bottleneck' -e 'On the Universal Truthfulness' -e 'In-Context Sharpness' -e 'C-Eval:' -e 'Composing Parameter-Efficient' "$page" | cut -c1-180 || true
-          done
-          echo "=== stylesheet link"
-          grep -o 'href="[^"]*main.css"' _site/index.html || true
-          echo "=== leftover template strings"
-          grep -R -n -e 'paper-title-number' -e 'Your Name' -e 'Red Brick University' -e 'GitHub University' -e 'profile.png' _site --include='*.html' | cut -c1-200 || true
-
       - name: Check rendered site
         run: |
           set -euo pipefail
@@ -60,9 +49,9 @@ jobs:
             previous=0
             for title in "${titles[@]}"; do
               grep -qF "$title" "$page"
-              line=$(grep -n -F "$title" "$page" | head -n 1 | cut -d: -f1)
-              test "$line" -gt "$previous"
-              previous=$line
+              offset=$(grep -obF "$title" "$page" | head -n 1 | cut -d: -f1)
+              test "$offset" -gt "$previous"
+              previous=$offset
             done
           done
           grep -qF "jliugi@connect.ust.hk" _site/index.html
