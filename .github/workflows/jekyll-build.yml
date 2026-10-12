@@ -37,20 +37,28 @@ jobs:
           set -euo pipefail
           test -s _site/index.html
           test -s _site/publications/index.html
-          for title in \
-            "SynLogic: Synthesizing Verifiable Reasoning Data at Scale for Learning Logical Reasoning and Beyond" \
-            "On the Perception Bottleneck of VLMs for Chart Understanding" \
-            "On the Universal Truthfulness Hyperplane Inside LLMs" \
-            "In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation" \
-            "C-Eval: A Multi-Level Multi-Discipline Chinese Evaluation Suite for Foundation Models" \
-            "Composing Parameter-Efficient Modules with Arithmetic Operations"; do
-            grep -qF "$title" _site/index.html
-            grep -qF "$title" _site/publications/index.html
+          titles=(
+            "SynLogic: Synthesizing Verifiable Reasoning Data at Scale for Learning Logical Reasoning and Beyond"
+            "On the Perception Bottleneck of VLMs for Chart Understanding"
+            "On the Universal Truthfulness Hyperplane Inside LLMs"
+            "In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation"
+            "C-Eval: A Multi-Level Multi-Discipline Chinese Evaluation Suite for Foundation Models"
+            "Composing Parameter-Efficient Modules with Arithmetic Operations"
+          )
+          for page in _site/index.html _site/publications/index.html; do
+            previous=0
+            for title in "${titles[@]}"; do
+              grep -qF "$title" "$page"
+              line=$(grep -n -F "$title" "$page" | head -n 1 | cut -d: -f1)
+              test "$line" -gt "$previous"
+              previous=$line
+            done
           done
           grep -qF "jliugi@connect.ust.hk" _site/index.html
           grep -qF "https://github.com/Vicent0205" _site/index.html
           grep -qF "Zhiyuan Honor Scholarship" _site/index.html
-          if grep -R -q -e 'paper-title-number' -e 'Your Name' -e 'Red Brick University' -e 'GitHub University' _site --include='*.html'; then
+          grep -qF "/LJT-Homepage/assets/css/main.css" _site/index.html
+          if grep -R -q -e 'paper-title-number' -e 'Your Name' -e 'Red Brick University' -e 'GitHub University' -e 'profile.png' _site --include='*.html'; then
             echo "Unremoved template content found"
             exit 1
           fi
