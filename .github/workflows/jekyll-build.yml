@@ -31,3 +31,27 @@ jobs:
         run: bundle exec jekyll build --strict_front_matter
         env:
           JEKYLL_ENV: production
+
+      - name: Check rendered site
+        run: |
+          set -euo pipefail
+          test -s _site/index.html
+          test -s _site/publications/index.html
+          for title in \
+            "SynLogic: Synthesizing Verifiable Reasoning Data at Scale for Learning Logical Reasoning and Beyond" \
+            "On the Perception Bottleneck of VLMs for Chart Understanding" \
+            "On the Universal Truthfulness Hyperplane Inside LLMs" \
+            "In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation" \
+            "C-Eval: A Multi-Level Multi-Discipline Chinese Evaluation Suite for Foundation Models" \
+            "Composing Parameter-Efficient Modules with Arithmetic Operations"; do
+            grep -qF "$title" _site/index.html
+            grep -qF "$title" _site/publications/index.html
+          done
+          grep -qF "jliugi@connect.ust.hk" _site/index.html
+          grep -qF "https://github.com/Vicent0205" _site/index.html
+          grep -qF "Zhiyuan Honor Scholarship" _site/index.html
+          if grep -R -q -e 'paper-title-number' -e 'Your Name' -e 'Red Brick University' -e 'GitHub University' _site --include='*.html'; then
+            echo "Unremoved template content found"
+            exit 1
+          fi
+          find _site -name '*.html' | sort
